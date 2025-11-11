@@ -1,48 +1,44 @@
 #include <stdio.h>
+#include <conio.h>
 
-#define MAX 100   // maximum number of students
+// Function for Linear Search
+void search(int a[], int n, int key)
+{
+    int i;
 
-// Function declaration
-int linearSearch(int arr[], int n, int key);
+    for(i = 0; i < n; i++)
+    {
+        if(a[i] == key)
+        {
+            printf("Student with roll number %d attended the training program.\n", key);
+            return;   // Exit the function after finding
+        }
+    }
+
+    // If not found in loop
+    printf("Student with roll number %d did NOT attend the training program.\n", key);
+}
 
 void main()
 {
-    int rollNo[MAX], n, i, key, found;
+    int a[50], n, key, i;
 
-    clrscr();  // clear the screen (Turbo C specific)
+    clrscr();  // Clears screen (Turbo C)
 
-    printf("Enter total number of students who attended the training program: ");
+    printf("Enter number of students: ");
     scanf("%d", &n);
 
-    printf("\nEnter roll numbers of students in random order:\n");
+    printf("Enter roll numbers of students:\n");
     for(i = 0; i < n; i++)
     {
-        printf("Roll No %d: ", i + 1);
-        scanf("%d", &rollNo[i]);
+        scanf("%d", &a[i]);
     }
 
-    printf("\nEnter the roll number to search: ");
+    printf("Enter roll number to search: ");
     scanf("%d", &key);
 
-    // call linear search function
-    found = linearSearch(rollNo, n, key);
+    // Call search function
+    search(a, n, key);
 
-    if(found == -1)
-        printf("\nStudent with roll number %d did NOT attend the training program.", key);
-    else
-        printf("\nStudent with roll number %d attended the training program (found at position %d).", key, found + 1);
-
-    getch();  // to hold screen in Turbo C
-}
-
-// Function definition
-int linearSearch(int arr[], int n, int key)
-{
-    int i;
-    for(i = 0; i < n; i++)
-    {
-        if(arr[i] == key)
-            return i;   // return index if found
-    }
-    return -1;   // return -1 if not found
+    getch();  // Waits for a key press
 }
