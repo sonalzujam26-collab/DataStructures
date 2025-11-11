@@ -1,38 +1,48 @@
 #include <stdio.h>
-#include <conio.h>
+
+#define MAX 100   // maximum number of students
+
+// Function declaration
+int linearSearch(int arr[], int n, int key);
 
 void main()
 {
-    int a[100], n, i, key, found = 0;
+    int rollNo[MAX], n, i, key, found;
 
-    clrscr();  // Clears the screen in Turbo C
+    clrscr();  // clear the screen (Turbo C specific)
 
-    printf("Enter number of students: ");
+    printf("Enter total number of students who attended the training program: ");
     scanf("%d", &n);
 
-    printf("Enter roll numbers of students:\n");
+    printf("\nEnter roll numbers of students in random order:\n");
     for(i = 0; i < n; i++)
     {
-        scanf("%d", &a[i]);
+        printf("Roll No %d: ", i + 1);
+        scanf("%d", &rollNo[i]);
     }
 
-    printf("Enter roll number to search: ");
+    printf("\nEnter the roll number to search: ");
     scanf("%d", &key);
 
-    // Linear Search
+    // call linear search function
+    found = linearSearch(rollNo, n, key);
+
+    if(found == -1)
+        printf("\nStudent with roll number %d did NOT attend the training program.", key);
+    else
+        printf("\nStudent with roll number %d attended the training program (found at position %d).", key, found + 1);
+
+    getch();  // to hold screen in Turbo C
+}
+
+// Function definition
+int linearSearch(int arr[], int n, int key)
+{
+    int i;
     for(i = 0; i < n; i++)
     {
-        if(a[i] == key)
-        {
-            found = 1;
-            break;
-        }
+        if(arr[i] == key)
+            return i;   // return index if found
     }
-
-    if(found == 1)
-        printf("Student with roll number %d attended the training program.\n", key);
-    else
-        printf("Student with roll number %d did NOT attend the training program.\n", key);
-
-    getch();  // Waits for a key press in Turbo C
+    return -1;   // return -1 if not found
 }
