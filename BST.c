@@ -1,36 +1,107 @@
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 
-// Structure for tree node
 struct node {
     int data;
     struct node *left, *right;
 };
 
+struct node *root = NULL;
+
 // Function to create a new node
-struct node* newNode(int value) {
-    struct node* temp = (struct node*)malloc(sizeof(struct node));
-    temp->data = value;
-    temp->left = temp->right = NULL;
-    return temp;
+struct node* createNode(int value) {
+    struct node *newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
 }
 
-// Function to insert a new node into BST
-struct node* insert(struct node* root, int value) {
+// Function to insert a node
+struct node* insert(struct node *root, int value) {
     if (root == NULL)
-        return newNode(value);
-
+        return createNode(value);
     if (value < root->data)
         root->left = insert(root->left, value);
     else if (value > root->data)
         root->right = insert(root->right, value);
-
     return root;
 }
 
-// Function for inorder traversal (for display)
-void inorder(struct node* root) {
+void insertNode() {
+    int value;
+    printf("\nEnter value to insert: ");
+    scanf("%d", &value);
+    root = insert(root, value);
+    printf("Node inserted.\n");
+}
+
+// Function to find height (longest path)
+int height(struct node *root) {
+    if (root == NULL)
+        return 0;
+    int left = height(root->left);
+    int right = height(root->right);
+    if (left > right)
+        return left + 1;
+    else
+        return right + 1;
+}
+
+void findLongestPath() {
+    printf("\nNumber of nodes in longest path: %d\n", height(root));
+}
+
+// Function to find minimum value
+void findMinValue() {
+    struct node *temp = root;
+    if (temp == NULL) {
+        printf("\nTree is empty.\n");
+        return;
+    }
+    while (temp->left != NULL)
+        temp = temp->left;
+    printf("\nMinimum value in tree: %d\n", temp->data);
+}
+
+// Function to mirror the tree
+void mirror(struct node *root) {
+    struct node *temp;
+    if (root == NULL)
+        return;
+    mirror(root->left);
+    mirror(root->right);
+    temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+}
+
+void mirrorTree() {
+    mirror(root);
+    printf("\nTree mirrored successfully.\n");
+}
+
+// Function to search a value
+void searchValue() {
+    int key;
+    struct node *temp = root;
+    printf("\nEnter value to search: ");
+    scanf("%d", &key);
+
+    while (temp != NULL) {
+        if (key == temp->data) {
+            printf("Value found in tree.\n");
+            return;
+        } else if (key < temp->data)
+            temp = temp->left;
+        else
+            temp = temp->right;
+    }
+    printf("Value not found in tree.\n");
+}
+
+// Inorder display
+void inorder(struct node *root) {
     if (root != NULL) {
         inorder(root->left);
         printf("%d ", root->data);
@@ -38,131 +109,43 @@ void inorder(struct node* root) {
     }
 }
 
-// Function to find height (longest path from root)
-int height(struct node* root) {
-    if (root == NULL)
-        return 0;
-    else {
-        int lheight = height(root->left);
-        int rheight = height(root->right);
-        if (lheight > rheight)
-            return (lheight + 1);
-        else
-            return (rheight + 1);
-    }
+void displayTree() {
+    printf("\nInorder traversal: ");
+    inorder(root);
+    printf("\n");
 }
 
-// Function to find minimum value in BST
-int findMin(struct node* root) {
-    if (root == NULL) {
-        printf("Tree is empty!\n");
-        return -1;
-    }
-    struct node* current = root;
-    while (current->left != NULL)
-        current = current->left;
-    return current->data;
-}
-
-// Function to swap left and right pointers at every node (mirror tree)
-void mirror(struct node* root) {
-    struct node* temp;
-    if (root == NULL)
-        return;
-
-    mirror(root->left);
-    mirror(root->right);
-
-    temp = root->left;
-    root->left = root->right;
-    root->right = temp;
-}
-
-// Function to search a value in BST
-int search(struct node* root, int key) {
-    if (root == NULL)
-        return 0;
-    if (root->data == key)
-        return 1;
-    else if (key < root->data)
-        return search(root->left, key);
-    else
-        return search(root->right, key);
+// Menu function
+void menu() {
+    printf("\n--- BINARY SEARCH TREE OPERATIONS ---");
+    printf("\n1. Insert Node");
+    printf("\n2. Find Longest Path");
+    printf("\n3. Find Minimum Value");
+    printf("\n4. Mirror the Tree");
+    printf("\n5. Search a Value");
+    printf("\n6. Display Tree (Inorder)");
+    printf("\n7. Exit");
+    printf("\nEnter your choice: ");
 }
 
 // Main function
-void main() {
-    struct node* root = NULL;
-    int choice, value, n, i, key;
-
-    clrscr();
-
-    printf("Enter number of nodes to insert initially: ");
-    scanf("%d", &n);
-
-    printf("Enter %d values:\n", n);
-    for (i = 0; i < n; i++) {
-        scanf("%d", &value);
-        root = insert(root, value);
-    }
-
+int main() {
+    int choice;
     do {
-        printf("\n\n------ MENU ------\n");
-        printf("1. Insert new node\n");
-        printf("2. Find number of nodes in longest path (Height)\n");
-        printf("3. Find minimum value in tree\n");
-        printf("4. Mirror the tree (swap left-right)\n");
-        printf("5. Search a value\n");
-        printf("6. Display inorder traversal\n");
-        printf("7. Exit\n");
-        printf("------------------\n");
-        printf("Enter your choice: ");
+        menu();
         scanf("%d", &choice);
 
         switch (choice) {
-        case 1:
-            printf("Enter value to insert: ");
-            scanf("%d", &value);
-            root = insert(root, value);
-            printf("Node inserted!\n");
-            break;
-
-        case 2:
-            printf("Longest path (height) = %d\n", height(root));
-            break;
-
-        case 3:
-            printf("Minimum value in tree = %d\n", findMin(root));
-            break;
-
-        case 4:
-            mirror(root);
-            printf("Tree mirrored (left and right swapped)!\n");
-            break;
-
-        case 5:
-            printf("Enter value to search: ");
-            scanf("%d", &key);
-            if (search(root, key))
-                printf("Value found in the tree!\n");
-            else
-                printf("Value not found!\n");
-            break;
-
-        case 6:
-            printf("Inorder traversal: ");
-            inorder(root);
-            printf("\n");
-            break;
-
-        case 7:
-            printf("Exiting...\n");
-            break;
-
-        default:
-            printf("Invalid choice!\n");
+            case 1: insertNode(); break;
+            case 2: findLongestPath(); break;
+            case 3: findMinValue(); break;
+            case 4: mirrorTree(); break;
+            case 5: searchValue(); break;
+            case 6: displayTree(); break;
+            case 7: printf("\nExiting program...\n"); break;
+            default: printf("\nInvalid choice!\n");
         }
     } while (choice != 7);
 
-    getch();
+    return 0;
 }
