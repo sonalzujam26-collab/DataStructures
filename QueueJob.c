@@ -1,81 +1,71 @@
 #include <stdio.h>
-#include <conio.h>
-#define MAX 5
+#define MAX 5   // maximum number of orders
 
 int queue[MAX];
 int front = -1, rear = -1;
 
-// Function to add a job (enqueue)
-void addJob(int job) {
-    if (rear == MAX - 1) {
-        printf("\nQueue Overflow! Cannot add more jobs.");
-    } else {
+// Function to add order
+void addOrder() {
+    int order;
+    if (rear == MAX - 1)
+        printf("\nSorry! No more orders can be accepted.\n");
+    else {
         if (front == -1)
             front = 0;
+        printf("\nEnter order number: ");
+        scanf("%d", &order);
         rear++;
-        queue[rear] = job;
-        printf("\nJob %d added to the queue.", job);
+        queue[rear] = order;
+        printf("Order %d added successfully.\n", order);
     }
 }
 
-// Function to delete a job (dequeue)
-void deleteJob() {
-    if (front == -1 || front > rear) {
-        printf("\nQueue Underflow! No jobs to delete.");
-    } else {
-        printf("\nJob %d deleted from the queue.", queue[front]);
+// Function to serve order
+void serveOrder() {
+    if (front == -1 || front > rear)
+        printf("\nNo orders to serve!\n");
+    else {
+        printf("\nOrder %d served.\n", queue[front]);
         front++;
-    }
-}
-
-// Function to display all jobs in the queue
-void displayQueue() {
-    int i;
-    if (front == -1 || front > rear) {
-        printf("\nQueue is empty.");
-    } else {
-        printf("\nCurrent Jobs in Queue:\n");
-        for (i = front; i <= rear; i++) {
-            printf("Job %d\n", queue[i]);
+        if (front > rear) {
+            front = -1;
+            rear = -1;
         }
     }
 }
 
-void main() {
-    int choice, job;
-    clrscr();
+// Function to display current orders
+void displayOrders() {
+    int i;
+    if (front == -1)
+        printf("\nNo pending orders.\n");
+    else {
+        printf("\nCurrent orders in queue:\n");
+        for (i = front; i <= rear; i++)
+            printf("%d ", queue[i]);
+        printf("\n");
+    }
+}
 
-    while (1) {
-        printf("\n\n--- Job Queue Menu ---");
-        printf("\n1. Add Job");
-        printf("\n2. Delete Job");
-        printf("\n3. Display Jobs");
+int main() {
+    int choice;
+    printf("\n--- PIZZA PARLOR ORDER SYSTEM ---\n");
+    do {
+        printf("\n1. Add Order");
+        printf("\n2. Serve Order");
+        printf("\n3. Display Orders");
         printf("\n4. Exit");
         printf("\nEnter your choice: ");
         scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                printf("Enter job number to add: ");
-                scanf("%d", &job);
-                addJob(job);
-                break;
-
-            case 2:
-                deleteJob();
-                break;
-
-            case 3:
-                displayQueue();
-                break;
-
-            case 4:
-                printf("\nExiting program...");
-                getch();
-                return;
-
-            default:
-                printf("\nInvalid choice! Try again.");
+        switch(choice) {
+            case 1: addOrder(); break;
+            case 2: serveOrder(); break;
+            case 3: displayOrders(); break;
+            case 4: printf("\nExiting program...\n"); break;
+            default: printf("\nInvalid choice!\n");
         }
-    }
+    } while(choice != 4);
+
+    return 0;
 }
