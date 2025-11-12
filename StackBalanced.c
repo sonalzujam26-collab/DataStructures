@@ -1,17 +1,19 @@
 #include <stdio.h>
-#include <conio.h>
+#include <string.h>
 #define MAX 50
 
 char stack[MAX];
 int top = -1;
 
-void push(char c) {
+// Function to push element into stack
+void push(char ch) {
     if (top == MAX - 1)
-        printf("Stack Overflow\n");
+        printf("\nStack Overflow\n");
     else
-        stack[++top] = c;
+        stack[++top] = ch;
 }
 
+// Function to pop element from stack
 char pop() {
     if (top == -1)
         return '\0';
@@ -19,45 +21,59 @@ char pop() {
         return stack[top--];
 }
 
-int isMatchingPair(char left, char right) {
-    if (left == '(' && right == ')')
+// Function to check matching pair
+int match(char open, char close) {
+    if (open == '(' && close == ')')
         return 1;
-    if (left == '{' && right == '}')
+    if (open == '{' && close == '}')
         return 1;
-    if (left == '[' && right == ']')
+    if (open == '[' && close == ']')
         return 1;
     return 0;
 }
 
-int checkBalanced(char exp[]) {
+// Function to check if expression is well parenthesized
+void checkExpression() {
+    char expr[50];
     int i;
-    char temp;
-    for (i = 0; exp[i] != '\0'; i++) {
-        if (exp[i] == '(' || exp[i] == '{' || exp[i] == '[')
-            push(exp[i]);
-        else if (exp[i] == ')' || exp[i] == '}' || exp[i] == ']') {
-            temp = pop();
-            if (!isMatchingPair(temp, exp[i]))
-                return 0;
+    char temp, ch;
+
+    printf("\nEnter expression: ");
+    scanf("%s", expr);
+
+    top = -1;  // initialize stack as empty
+
+    for (i = 0; expr[i] != '\0'; i++) {
+        ch = expr[i];
+
+        // If opening bracket, push to stack
+        if (ch == '(' || ch == '{' || ch == '[')
+            push(ch);
+
+        // If closing bracket, check match
+        else if (ch == ')' || ch == '}' || ch == ']') {
+            if (top == -1) {
+                printf("\nUnbalanced expression!\n");
+                return;
+            } else {
+                temp = pop();
+                if (!match(temp, ch)) {
+                    printf("\nUnbalanced expression!\n");
+                    return;
+                }
+            }
         }
     }
+
+    // If stack empty at end -> balanced
     if (top == -1)
-        return 1;  // Balanced
+        printf("\nExpression is well parenthesized.\n");
     else
-        return 0;  // Not balanced
+        printf("\nUnbalanced expression!\n");
 }
 
-void main() {
-    char expression[MAX];
-    clrscr();
-
-    printf("Enter an expression: ");
-    gets(expression);
-
-    if (checkBalanced(expression))
-        printf("The expression is well parenthesized.\n");
-    else
-        printf("The expression is NOT well parenthesized.\n");
-
-    getch();
+int main() {
+    printf("\n--- CHECK BALANCED EXPRESSION ---\n");
+    checkExpression();
+    return 0;
 }
